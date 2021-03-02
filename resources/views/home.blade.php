@@ -161,7 +161,7 @@
 //Ocultar mensaje
     setTimeout(function () {
         $("#msj").fadeOut(1000);
-    }, 3000);
+    }, 7000);
 
 });
 </script>
