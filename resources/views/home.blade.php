@@ -57,7 +57,7 @@
   @include('msj')
 
   <h4 class="text-center">
-    Como Actualizar Registro con Ventana Modal en 
+    Cómo Eliminar y Actualizar Registro con Ventana Modal en 
     <img src="{{ asset('img/laravel.png') }}" alt="Logo"  style="width: 120px;">
   </h4>
   <hr>
