@@ -1,85 +1,67 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\children;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Session;
 class ChildrenController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+ public function home(){
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        $total = children:: all()->count();
+        $childrens = children::orderBy('id', 'DESC')->paginate(5);
+        return view('home', compact('childrens','total'));
+}
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\children  $children
-     * @return \Illuminate\Http\Response
-     */
-    public function show(children $children)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\children  $children
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(children $children)
-    {
-        //
-    }
+public function SaveChildren(Request $request){
+        
+        $dataChildren = new children();
+        
+        $dataChildren->name    =$request->get('name');
+        $dataChildren->year    =$request->get('year');
+        $dataChildren->sex     =$request->get('sex');
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\children  $children
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, children $children)
-    {
-        //
-    }
+        $dataChildren->save(); 
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\children  $children
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(children $children)
-    {
-        //
-    }
+
+        $total = children:: all()->count();
+        $childrens = children::orderBy('id', 'DESC')->paginate(5);
+        
+        
+        Session::flash('message', 'Felicitaciones .! Niño Registrado Correctamente ...');
+        return redirect('/')->with('childrens','total');
+}
+
+
+public function deleteChildren($id){
+
+        $DatosChildren = children::find($id);
+        $nombreChildre = $DatosChildren->name;
+        $DatosChildren->delete();
+
+        $total = children:: all()->count();
+        $childrens = children::orderBy('id', 'DESC')->paginate(5);
+        return redirect('/')->with('msjdelete', 'El Niño ('.$nombreChildre.') Fue eliminado Correctamente.','childrens','total');
+}
+
+
+public function updateChildren(Request $request, $id){
+
+    $DatosChildren = children:: findOrFail($id); 
+
+    $DatosChildren->name     = $request->name;
+    $DatosChildren->sex      = $request->sex;
+    $DatosChildren->year     = $request->year;
+
+    $DatosChildren->save();
+
+    $total = children:: all()->count();
+    $childrens = children::orderBy('id', 'DESC')->paginate(5);
+    return redirect('/')->with('msjupdate','Datos del Niño ('. $DatosChildren->name .') Actualizados Correctamente', 'childrens','total');
+ }
+
+
+
 }

@@ -5,22 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link type="text/css" rel="shortcut icon" href="img/logo-mywebsite-urian-viera.svg"/>
-  <title>Actualizar Registro con Ventana Modal y Ajax :: WebDeveloper Urian Viera</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+  <title>Eliminar - Actualizar Registro con Ventana Modal en Laravel :: WebDeveloper Urian Viera</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css">
+  <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
   <link rel="stylesheet" type="text/css" href="{{ asset('css/cargando.css') }}">
   <link rel="stylesheet" type="text/css" href="{{ asset('css/maquinawrite.css') }}">
+  <style> 
+        table tr th{
+            background:rgba(0, 0, 0, .6);
+            color: azure;
+        }
+        h3{
+            color:crimson; 
+            margin-top: 100px;
+        }
+        a:hover{
+            cursor: pointer;
+            color: #333 !important;
+        }
+        .zmdi:hover{
+          color: green;
+          cursor: pointer;
+        }
+      </style>
 </head>
 <body>
-  
+ 
 <div class="cargando">
     <div class="loader-outter"></div>
     <div class="loader-inner"></div>
 </div>
 
+
 <nav class="navbar navbar-expand-lg navbar-light navbar-dark fixed-top" style="background-color: #563d7c !important;">
     <ul class="navbar-nav mr-auto collapse navbar-collapse">
       <li class="nav-item active">
-        <img src="img/logo-mywebsite-urian-viera.svg" alt="Web Developer Urian Viera" width="120">
+        <a href="{{ ('/') }}"> 
+          <img src="{{ asset('img/logo-mywebsite-urian-viera.svg') }}" alt="Web Developer Urian Viera" width="120">
+        </a>
       </li>
     </ul>
     <div class="my-2 my-lg-0" id="maquinaescribir">
@@ -29,18 +51,24 @@
 </nav>
 
 
+
 <div class="container mt-5 p-5">
 
-<h4 class="text-center">Lista de Niños</h4>
-<hr>
+  @include('msj')
+
+  <h4 class="text-center">
+    Como Actualizar Registro con Ventana Modal en 
+    <img src="{{ asset('img/laravel.png') }}" alt="Logo"  style="width: 120px;">
+  </h4>
+  <hr>
 
 
-<div class="row text-center" id="capa">
+<div class="row text-center" style="background-color: #cecece">
   <div class="col-md-6"> 
-    <strong>Registrar Empleado</strong>
+    <strong>Registrar Nuevo Niño</strong>
   </div>
   <div class="col-md-6"> 
-    <strong>Lista de Empleados</strong>
+    <strong>Lista de Niño <span style="color: crimson">  ({{ $total }})</span> </strong>
   </div>
 </div>
 
@@ -48,41 +76,65 @@
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
   <div class="body">
       <div class="row clearfix">
-        <div class="col-sm-4">
-        <form method="post" name="formRegistraEmpleado" id="formRegistraEmpleado">
-              <div class="row">
-                <div class="col-md-12">
-                    <label for="Nombre" class="form-label">Nombre del Empleado</label>
-                    <input type="text" class="form-control" name="nombre" id="nombre" required='true' autofocus>
-                </div>
-                <div class="col mt-2">
-                    <label for="fechaInicio" class="form-label">Fecah Inicio</label>
-                    <input type="date" class="form-control" name="fechaInicio" id="fechaInicio" required='true'>
-                </div>
-                <div class="col mt-2">
-                    <label for="fechaFin" class="form-label">Fecha Fin</label>
-                    <input type="date" class="form-control" name="fechaFin" id="fechaFin" required='true'>
-                </div>
-              </div>
-                <div class="row justify-content-start text-center mt-5">
-                    <div class="col-12">
-                        <button class="btn btn-primary btn-block" id="btnEnviar">
-                            <span class="spinner-border spinner-border-sm mr-2"></span>
-                            Registrar Empleado
-                        </button>
-                    </div>
-                </div>
-          </form>
-          </div>  
+
+        <div class="col-sm-5">
+        <!--- Formulario para registrar Niño --->
+          @include('RegistrarChildren')
+
+        </div>  
+
          
 
-          <div class="col-sm-8">
+          <div class="col-sm-7">
               <div class="row">
                 <div class="col-md-12 p-2">
-                    <div class="table-responsive" id="respuesta">
-                        <h4>holaaaa</h4>
-                    </div>
+
+
+            @if($childrens->count())
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover">
+                        <tr>
+                            <th>Nombre del Niño</th>
+                            <th>Edad </th>
+                            <th>Sexo </th>
+                            <th>Acción</th>
+                        </tr>
+                            @foreach($childrens as $posicion => $children)
+                                <tr>
+                                    <td>{{ $children->name }}</td>
+                                    <td>{{ $children->year }}</td>
+                                    <td>{{ $children->sex }}</td>
+                                    <td style="text-align: center;">
+                                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteChildresn{{ $children->id }}">
+                                            <i class="zmdi zmdi-delete zmdi-hc-lg" title="Eliminar Registro"></i> 
+                                        </button>
+                                      
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editChildresn{{ $children->id }}">
+                                          <i class="zmdi zmdi-refresh-sync zmdi-hc-lg" title="Actualizar Registro"></i>  
+                                        </button>
+                                    </td>
+                                </tr>
+
+
+                            <!--Ventana Modal para Actualizar--->
+                              @include('ModalEditar')
+
+                            <!--Ventana Modal para la Alerta de Eliminar--->
+                              @include('ModalEliminar')
+
+
+                            @endforeach
+                    </table>
+
+
+                        
+                  {!! $childrens->links() !!}
+
+                   
                 </div>
+            @endif
+
+
               </div>
           </div>
           </div>
@@ -91,46 +143,28 @@
 </div>
 
 
+
 </div>
 
 
-<script  src="https://code.jquery.com/jquery-2.2.4.js"></script>
-<script type="text/javascript">
-$(window).load(function() {
-    $(".cargando").fadeOut(1000);
-});
+<script src="{{ asset('js/jquery.min.js') }}"></script>
+<script src="{{ asset('js/popper.min.js') }}"></script>
+<script src="{{ asset('js/bootstrap.min.js') }}"></script>
 
+<script type="text/javascript">
     $(document).ready(function() {
 
-      $(".spinner-border").hide(); //Ocultando el cargando
-      
-      $('#btnEnviar').click(function(e){
-        e.preventDefault();
-        var url = "DataEmpleado.php"; 
+        $(window).load(function() {
+            $(".cargando").fadeOut(1000);
+        });
 
-            $('#btnEnviar').removeClass('btn-primary');
-            $('#btnEnviar').addClass('btn-success');
-            $("#btnEnviar").attr('disabled',true); //Desabilitar el boton
-            $(".spinner-border").show();   //Mostrar Cargando   
+//Ocultar mensaje
+    setTimeout(function () {
+        $("#msj").fadeOut(1000);
+    }, 3000);
 
-        $.ajax({                        
-           type: "POST",                 
-           url: url,                    
-           data: $("#formRegistraEmpleado").serialize(),
-           success: function(data)            
-           {
-             $('#respuesta').html(data);  
-             $(".spinner-border").hide(); 
-             $("#btnEnviar").attr('disabled',false);
-             $('#btnEnviar').removeClass('btn-success');
-             $('#btnEnviar').addClass('btn-primary');
-             $("#btnEnviar").text("Registrar Empleado");      
-           }
-         });
-      });
-
-    });
-    </script>
+});
+</script>
 
 </body>
 </html>

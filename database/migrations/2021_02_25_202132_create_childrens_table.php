@@ -15,6 +15,9 @@ class CreateChildrensTable extends Migration
     {
         Schema::create('childrens', function (Blueprint $table) {
             $table->id();
+            $table->string('name',20);
+            $table->string('year');
+            $table->string('sex');
             $table->timestamps();
         });
     }
